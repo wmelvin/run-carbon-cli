@@ -10,7 +10,7 @@ from random import randint
 from rich import print
 from watchfiles import watch
 
-__version__ = "0.1.dev2"
+__version__ = "0.1.dev3"
 
 code_dir = Path.cwd() / "code_files"
 
@@ -19,7 +19,8 @@ def run_carbon():
     config_file = Path.home() / ".carbon-now.json"
 
     # config_name = "config-nightowl-hack"
-    config_name = "config-oceanicnext-hack"
+    # config_name = "config-oceanicnext-hack"
+    config_name = "config-onelight-hack"
 
     use_config = Path.cwd() / f"{config_name}-png.json"
 
