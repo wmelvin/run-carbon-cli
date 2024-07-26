@@ -22,6 +22,7 @@ RUN pip install -r requirements.txt
 
 # Create sub-directories.
 RUN mkdir code_files
+RUN mkdir config_files
 RUN mkdir images
 
 # Copy configuration and code.

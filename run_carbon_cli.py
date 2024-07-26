@@ -10,28 +10,54 @@ from random import randint
 from rich import print
 from watchfiles import watch
 
-__version__ = "0.1.dev3"
+__version__ = "0.1.dev4"
 
 code_dir = Path.cwd() / "code_files"
 
 
+def get_app_options_from_file(config_dir: Path) -> dict:
+    opts = {}
+    opt_file = config_dir / "run_carbon_cli-options.txt"
+    if opt_file.exists():
+        for line in opt_file.read_text().splitlines():
+            s = line.strip()
+            if s.startswith("#"):
+                continue
+            if "=" in s:
+                n, v = line.split("=", 1)
+                opts[n.strip()] = v.strip()
+    return opts
+
+
 def run_carbon():
-    config_file = Path.home() / ".carbon-now.json"
+    target_config = Path.home() / ".carbon-now.json"
 
-    # config_name = "config-nightowl-hack"
-    # config_name = "config-oceanicnext-hack"
-    config_name = "config-onelight-hack"
+    # If a file named 'carbon-now.json' is in the config_files directory
+    # then use that configuration.
+    config_dir = Path.cwd() / "config_files"
+    use_config = config_dir / "carbon-now.json"
+    if not use_config.exists():
+        #  Otherwise use a default local config file.
+        config_name = "config-onelight-hack"
+        # config_name = "config-nightowl-hack"
+        # config_name = "config-oceanicnext-hack"
 
-    use_config = Path.cwd() / f"{config_name}-png.json"
+        use_config = Path.cwd() / f"{config_name}-png.json"
 
     if not use_config.exists():
         sys.stderr.write(f"\nERROR: Config file '{use_config}' not found.\n")
         sys.exit(1)
 
+    print(f"Using configuration '{use_config}'")
+
+    opts = get_app_options_from_file(config_dir)
+
+    print(f"Options: {opts}")
+
     # Replace the default config file with the config to use.
     # WARNING: This wipes out any presets saved manually via
     # the carbon-now CLI.
-    shutil.copy2(use_config, config_file)
+    shutil.copy2(use_config, target_config)
 
     out_dir = Path.cwd() / "images"
     if not out_dir.exists():

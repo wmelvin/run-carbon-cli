@@ -5,4 +5,5 @@ venv/
 .vscode/
 
 code_files/
+config_files/
 images/
