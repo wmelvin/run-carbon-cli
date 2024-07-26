@@ -7,12 +7,45 @@ import time
 from pathlib import Path
 from random import randint
 
+from PIL import Image
 from rich import print
 from watchfiles import watch
 
-__version__ = "0.1.dev4"
+__version__ = "0.1.dev5"
 
 code_dir = Path.cwd() / "code_files"
+
+
+def scale_image(src_image: Path, opts: dict) -> None:
+    max_width = opts.get("image_max_width")
+    if not max_width:
+        return
+
+    try:
+        new_width = int(max_width)
+    except ValueError:
+        print(f"WARNING: Invalid image_max_width '{max_width}'")
+        return
+
+    with Image.open(src_image) as img:
+        if img.size[0] <= new_width:
+            return
+
+        # Preserve the aspect ratio
+        width_percent = (new_width / float(img.size[0]))
+        new_height = int((float(img.size[1]) * float(width_percent)))
+
+        # Resize the image
+        new_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+        # # Save the resized image
+        # out_image = src_image.parent / f"{src_image.stem}-scaled{src_image.suffix}"
+        # print(f"Saving scaled image '{out_image}'")
+        # new_img.save(out_image)
+
+        # Overwrite the original image
+        print(f"Resized image '{src_image}'")
+        new_img.save(src_image)
 
 
 def get_app_options_from_file(config_dir: Path) -> dict:
@@ -105,6 +138,8 @@ def run_carbon():
 
         if result.stderr is not None:
             print(f"\nSTDERR:\n{result.stderr.strip()}\n")
+
+        scale_image(out_file, opts)
 
         # The carbon-now CLI hits the web site, so don't hammer it.
         print("(pause)")
