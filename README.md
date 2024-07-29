@@ -8,15 +8,17 @@ Run [carbon-now-cli](https://github.com/mixn/carbon-now-cli), in a Docker contai
 
 ![Example code image](readme_images/codeimg_def_main.png)
 
+Example code image, created by `carbon-now`.
+
 ---
 
 ## Requirements
 
 This application was developed on Linux. The base requirements are **Docker** and **Python**.
 
-It is recommended to use a Virtual Environment to separate Python package installations between different projects and your operating system's Python packages.
+It is recommended to use a **Virtual Environment** to separate Python package installations between different projects and your operating system's Python packages.
 
-Initial setup:
+Initial setup. Run in the project's base directory:
 
 ``` bash
 # Create a Python virtual environment named 'venv'
@@ -78,6 +80,14 @@ The script will run the `run_carbon()` function once, then start watching for ch
 Press `ctrl+c` to stop the script. 
 
 Type `exit` to close the BASH prompt in the container.
+
+### Configuration Files
+
+The `run_carbon_cli.py` script looks for the following optional configuration files in the `config_files` directory:
+
+- `carbon-now.json` - This file must be in the format of a carbon-now presets file. The file [config-onelight-hack-png.json](./config-onelight-hack-png.json) is an example of that format. You can explore the available attributes by running the `carbon-now` CLI manually using `--interactive` mode (see the [carbon-now](https://github.com/mixn/carbon-now-cli) docs). When you run the CLI, it produces the (hidden) file `.carbon-now.json` in the user home directory.
+
+- `run_carbon_cli-options.txt` - Currently only one option is supported: `image_max_width`. For example, if the file contains `image_max_width = 800` then a generated image wider than 800 pixels will be scaled (resized) down to that width.
 
 ### Use for a documentation project
 
